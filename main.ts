@@ -10,10 +10,11 @@ import {
 	TFile,
 	FileSystemAdapter,
 	EditorPosition,
+	MarkdownView,
 } from "obsidian";
 
 import axios from "axios";
-import ShortUniqueId from "short-unique-id";
+const ShortUniqueId = require("short-unique-id");
 import {
 	deleteFile,
 	getFile,
@@ -119,7 +120,8 @@ function removeMergeNotifs() {
 	});
 }
 
-const { randomUUID } = new ShortUniqueId({ length: 6 });
+const uid = new ShortUniqueId({ length: 6 });
+const randomUUID = () => uid.rnd();
 
 interface driveValues {
 	refreshToken: string;
@@ -1045,7 +1047,7 @@ export default class driveSyncPlugin extends Plugin {
 		var metaExists = metaPattern.test(content);
 		var driveDataExists = driveDataPattern.test(content);
 		
-		const lastEditor = this.app.workspace.activeEditor;
+		const lastEditor = this.app.workspace.getActiveViewOfType(MarkdownView);
 
 		if (metaExists) {
 			if (driveDataExists) {
